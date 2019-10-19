@@ -1,3 +1,6 @@
+#Código modificado, que pode ser encontrado em:
+#https://github.com/rstudio/shiny-examples/blob/master/004-mpg/app.R
+
 library(shiny)
 library(datasets)
 
