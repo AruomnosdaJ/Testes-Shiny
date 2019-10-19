@@ -1,3 +1,6 @@
+#Código modificado, que pode ser encontrado em:
+#https://stackoverflow.com/questions/52611963/shiny-r-histogram
+
 library(shiny)
 library(datasets)
 
