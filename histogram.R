@@ -2,22 +2,21 @@ library(shiny)
 library(datasets)
 
 # Usando o conjunto de dados `mtcars`.
-# 
 
 mpg <- mtcars
 # Define UI.
 ui <- fluidPage(
   
-  titlePanel("Shiny mtcars"),
+  titlePanel("Histograma das variáveis de mtcars"),
   
   sidebarLayout(
     
     selectInput("Ind","Variável",
                 choices = names(mpg)),
       
-    # Main panel para exibir os outputs
+    # Main panel para exibir os outputs.
     mainPanel(
-      # Output: Plot da variável selecionada em relação a mpg.
+      # Output: Plot da variável selecionada.
       plotOutput("hist")
       
     )
