@@ -11,7 +11,7 @@ mpgData$vs <- factor(mpgData$vs, labels = c("V-shaped", "straight"))
 # Define UI.
 ui <- fluidPage(
   
-  titlePanel("Shiny mtcars"),
+  titlePanel("Boxplot em relação a variável mpg"),
   
   # Sidebar layout com definições de input e output.
   sidebarLayout(
@@ -28,12 +28,12 @@ ui <- fluidPage(
                     "Motor" = "vs",
                     "Transmissão" = "am")),
       
-      # Input: Caixa de seleção para inclusão de outliers.
+      # Input: Box para inclusão de outliers.
       checkboxInput("outliers", "Show outliers", TRUE)
       
     ),
     
-    # Main panel para exibir os outputs
+    # Main panel para exibir os outputs.
     mainPanel(
       
       # Output: Formatar texto para caption.
