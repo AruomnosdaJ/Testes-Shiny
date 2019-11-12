@@ -1,0 +1,97 @@
+---
+title: "Mt. Rainier"
+author: "Jadson Moura"
+date: "12 de novembro de 2019"
+output: html_document
+runtime: shiny
+---
+
+```{r message=FALSE, warning=FALSE}
+library(corrplot)
+library(dplyr)
+library(GGally)
+library(ggplot2)
+library(plyr)
+library(readr)
+library(shiny)
+library(shinydashboard)
+
+Escalada <- read_csv("climbing_statistics.csv")
+clima <- read_csv("Rainier_Weather.csv")
+
+   Escalada$Data<- as.Date(Escalada$Date,"%m/%d/%Y")
+   Escalada$Ano<- as.numeric(format(Escalada$Data,"%Y"))
+   Escalada$Mes<-as.numeric(format(Escalada$Data,"%m"))
+
+   clima$Data<-as.Date(clima$Date, format="%m/%d/%Y")
+   clima$Ano<-as.numeric(format(clima$Data, "%Y"))
+   clima$Mes<-as.numeric(format(clima$Data,"%m"))
+
+   Escalada$Mes<- factor(Escalada$Mes,labels = c("Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov","Dez"))
+   
+   clima$Mes<- factor(clima$Mes,labels = c("Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov","Dez"))
+```
+
+```{r}
+  Sucesso<-Escalada %>% select("Date", "Route", "Succeeded", "Success Percentage", "Ano", "Mes") %>%
+      filter(Succeeded>0)
+
+   Rotas<-rev(sort(table(Sucesso$Route)))[1:5]
+```
+
+```{r}
+  tempo<-clima %>%
+  select("Battery Voltage AVG", "Temperature AVG", "Relative Humidity AVG", "Wind Speed Daily AVG", "Wind Direction AVG", "Solare Radiation AVG")
+```
+
+```{r}
+Tentativas <- Escalada 
+Tentativas <- Tentativas[-c(327,1402,),-c(1,2,5,6,7,8)]
+```
+
+```{r}
+ui <- dashboardPage(
+  dashboardHeader(title = "Mt. Rainier"),
+  dashboardSidebar(
+    sidebarMenu(
+      menuItem(tabName = "main1", "Escalada", icon = icon("th")),
+      menuItem(tabName = "main2", "Clima", icon = icon("table"))
+    )
+  ),
+  dashboardBody(
+tabItems(
+      # First tab content
+      tabItem(tabName = "main1",
+        fluidPage(
+          box(plotOutput("plot1", height = 700, width = 1000))
+        )
+      ),
+
+      # Second tab content
+      tabItem(tabName = "main2",
+        fluidPage(
+          box(plotOutput("plot2", height = 700, width = 700))
+        )
+      )
+    )
+  )
+)
+server <- function(input, output) {
+  output$plot1 <- renderPlot({
+   barplot(Rotas, col="green",
+           main="Top 5 Rotas, escaladas bem sucedidas",
+           ylab="Sucessos", ylim=c(0,3000))
+  })
+  output$plot2 <-renderPlot({
+   corrplot(cor(tempo), type="lower", method="number", tl.col = "black") 
+  })
+}
+
+shinyApp(ui, server)
+```
+
+```{r}
+ggparcoord(Tentativas)
+```
+
+
